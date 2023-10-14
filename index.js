@@ -8,7 +8,7 @@ const server = createServer(app);
 const io = new Server(server);
 
 app.get("/", (req, res) => {
-  res.json({ success: true });
+  res.sendFile(__dirname + "/frontend.html");
 });
 
 io.on("connection", (socket) => {
@@ -17,13 +17,13 @@ io.on("connection", (socket) => {
   socket.on("name", (msg) => {
     console.log("message received is", msg);
 
-    socket.emit("showName", msg);
+    io.emit("showName", msg);
   });
 
   socket.on("message", (msg) => {
     console.log("message received is", msg);
 
-    socket.emit("showMsg", msg);
+    io.emit("showMsg", msg);
   });
 });
 
