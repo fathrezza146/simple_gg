@@ -14,20 +14,16 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   console.log("connected", socket.id);
 
-  socket.on("roomOne", (msg) => {
+  socket.on("name", (msg) => {
     console.log("message received is", msg);
 
-    socket.join("room");
-
-    socket.to("room").emit("clientTwo", msg);
+    socket.emit("showName", msg);
   });
 
-  socket.on("roomTwo", (msg, callback) => {
+  socket.on("message", (msg) => {
     console.log("message received is", msg);
 
-    socket.join("room");
-
-    socket.to("room").emit("clientOne", msg);
+    socket.emit("showMsg", msg);
   });
 });
 

@@ -34,9 +34,11 @@
       id="messageArea"
     ></div>
   </body>
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    let socket = io();
+  <script src="https://cdn.socket.io/socket.io-3.0.5.js"></script>
+  <script type="text/javascript">
+    const socket = io.connect("http://localhost:3200", {
+      transports: ["websocket"],
+    });
 
     let form = document.getElementById("form");
     let myname = document.getElementById("myname");
@@ -45,10 +47,28 @@
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
+      socket.emit("name", myname.value);
+      socket.emit("message", message.value);
 
       if (message.value) {
         message.value = "";
       }
+    });
+
+    socket.on("showName", (msg) => {
+      let name = document.createElement("p");
+      name.style.backgroundColor = "grey";
+      name.style.width = "100%";
+      name.style.textAlign = "center";
+      name.style.color = "white";
+      name.textContent = msg + ":";
+      messageArea.appendChild(name);
+    });
+
+    socket.on("showMsg", (msg) => {
+      let chatContent = document.createElement("p");
+      chatContent.textContent = msg;
+      messageArea.appendChild(chatContent);
     });
   </script>
 </html>
